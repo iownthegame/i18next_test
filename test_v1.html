@@ -1,0 +1,21 @@
+<div id="title"></div>
+<div id="text"></div>
+<script src="i18next_v1.min.js"></script>
+<script>
+	(function () {
+	    i18n.init({
+            debug: true,
+            lng: "zh_TW",
+            resGetPath: 'resources/__ns__-__lng__.json'
+        }, function () {
+        	var title = i18n.t("title") || "title";
+        	var status = "<span>" + 123 + "</span>";
+        	var text = i18n.t("text_with_variable", {n: status});
+        	var div = document.getElementById("title");
+        	div.innerHTML = title;
+        	div = document.getElementById("text");
+        	div.innerHTML = text;
+        });
+	})();
+
+</script>

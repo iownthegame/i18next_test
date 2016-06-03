@@ -1,0 +1,30 @@
+<div id="title"></div>
+<div id="text"></div>
+<script src="i18nextXHRBackend.min.js"></script>
+<script src="i18next.min.js"></script>
+<script>
+	(function () {
+	    i18next.use(i18nextXHRBackend)
+	            .init({
+	                debug: true,
+	                lng: "zh_TW",
+	                backend: {
+	                    loadPath: 'resources/__ns__-__lng__.json'
+	                },
+	                interpolation: {
+	                	prefix: '__',
+	                	suffix: '__',
+	                	unescapePrefix: '~'
+	                }
+	            }, function () {
+	            	var title = i18next.t("title") || "title";
+		        	var status = "<span>" + 123 + "</span>";
+		        	var text = i18next.t("text_with_variable", {n: status});
+		        	var div = document.getElementById("title");
+		        	div.innerHTML = title;
+		        	div = document.getElementById("text");
+		        	div.innerHTML = text;
+	            });
+	})();
+
+</script>
