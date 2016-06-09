@@ -1,30 +1,54 @@
 <div id="title"></div>
 <div id="text"></div>
+<button id="btn">reload resource file</button>
 <script src="i18nextXHRBackend.min.js"></script>
 <script src="i18next.min.js"></script>
 <script>
 	(function () {
-	    i18next.use(i18nextXHRBackend)
-	            .init({
-	                debug: true,
-	                lng: "zh_TW",
-	                backend: {
-	                    loadPath: 'resources/__ns__-__lng__.json'
-	                },
-	                interpolation: {
-	                	prefix: '__',
-	                	suffix: '__',
-	                	unescapePrefix: '~'
-	                }
-	            }, function () {
-	            	var title = i18next.t("title") || "title";
-		        	var status = "<span>" + 123 + "</span>";
-		        	var text = i18next.t("text_with_variable", {n: status});
-		        	var div = document.getElementById("title");
-		        	div.innerHTML = title;
-		        	div = document.getElementById("text");
-		        	div.innerHTML = text;
-	            });
-	})();
+		var lng = "zh_TW";
 
+		i18next.use(i18nextXHRBackend)
+				.init({
+					debug: true,
+					lng: lng,
+					backend: {
+						loadPath: 'resources/__ns__-__lng__.json'
+					},
+					interpolation: {
+						prefix: '__',
+						suffix: '__',
+						unescapePrefix: '~'
+					}
+				}, function () {
+					var title = i18next.t("title") || "title";
+					var status = "<span>" + 123 + "</span>";
+					var text = i18next.t("text_with_variable", {n: status});
+					document.getElementById("title").innerHTML = title;
+					document.getElementById("text").innerHTML = text;
+				});
+
+		var backendConnector = i18next.services.backendConnector;
+
+		document.getElementById("btn").onclick = function() {
+			//click the button after change the title value in resources/translation-zh_TW.json
+			var nss = i18next.options.ns;
+			for (var i = 0; i < nss.length; i++) {
+				var ns = nss[i];
+				backendConnector.read(lng, ns, 'read', null, null, function(err, data){
+					if (err) {
+						console.warn('loading namespace '+ ns + ' for language ' + lng + ' failed,' + err );
+					}
+					else if (!err && data) {
+						console.log('loaded namespace '+ ns + ' for language ' + lng);
+						console.log(data)
+						backendConnector.loaded(lng+'|'+ns, err, data);
+
+						var title = i18next.t("title") || "title";
+						console.log("title changed: " + title)
+						document.getElementById("title").innerHTML = title;
+					}
+				});
+			}
+		};
+	})();
 </script>
